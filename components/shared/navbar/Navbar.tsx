@@ -5,6 +5,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { SignedIn } from '@clerk/nextjs'
 import { UserButton } from '@clerk/clerk-react'
+import Theme from './Theme'
+import MobileNav from './MobileNav'
+import GlobalSearch from '@/components/shared/search/GlobalSearch'
 
 const Navbar = () => {
   return (
@@ -20,10 +23,10 @@ const Navbar = () => {
         <p className='h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden'>Dev <span className='text-primary-500'>OverFlow</span></p>
         </Link>
 
-        GlobalSearch
+        <GlobalSearch />
 
         <div className='flex-between gap-5'>
-            Theme
+            <Theme />
 
             <SignedIn>
             <UserButton
@@ -39,7 +42,7 @@ const Navbar = () => {
                 />
             </SignedIn>
 
-            MobileNav
+            <MobileNav />
         </div>
     </nav>
   )
