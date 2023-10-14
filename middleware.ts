@@ -5,6 +5,6 @@ export default authMiddleware({
 });
 
 export const config = {
-	runtime: "edge",
+	runtime: "experimental-edge",
 	matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
