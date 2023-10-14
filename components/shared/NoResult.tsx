@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/no-custom-classname */
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -32,7 +33,7 @@ const NoResult = ( { title, description, link, linkTitle } : Props) => {
       <p className='body-regular text-dark500_light700 my-3.5 max-w-md text-center'>{description}</p>
 
       <Link href={link}>
-      <Button className='paragraph-medium mt-5 min-h-[46px] rounded-lg bg-primary-500 px-4 py-3 text-light-900 hover:bg-primary-500 dark:bg-primary-500 dark:text- light-900'>
+      <Button className='paragraph-medium dark:text-light-900 mt-5 min-h-[46px] rounded-lg bg-primary-500 px-4 py-3 text-light-900 hover:bg-primary-500 dark:bg-primary-500'>
         {linkTitle}
       </Button>
       </Link>
