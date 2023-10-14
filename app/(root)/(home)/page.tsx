@@ -72,6 +72,4 @@ export default async function Home() {
 	);
 }
 
-export const config = {
-	runtime: "experimental-edge",
-};
+export const runtime = "edge";
