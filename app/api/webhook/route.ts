@@ -52,7 +52,6 @@ export async function POST(req: Request) {
   }
  
   // Get the ID and type
-  const { id } = evt.data;
   const eventType = evt.type;
 
     console.log({eventType})
@@ -70,7 +69,9 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({message: 'OK', user: mongoUser})
-  } else  if(eventType === 'user.updated') {
+  } 
+  
+  if(eventType === 'user.updated') {
     const { id, email_addresses, image_url, username, first_name, last_name } = evt.data;
 
     // Create a new user in your database
