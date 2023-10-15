@@ -9,13 +9,16 @@ export default authMiddleware({
 		"/tags/:id",
 		"/profile/:id",
 		"/community",
-		"/jobs"
+		"/jobs",
 	],
-	ignoredRoutes: [
-		"/api/webhook", "/api/chatgpt"
-	]
+	ignoredRoutes: ["/api/webhook", "/api/chatgpt"],
 });
 
 export const config = {
-	matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+	matcher: [
+		"/((?!.+\\.[\\w]+$|_next).*)",
+		"/",
+		"/(api|trpc)(.*)",
+		"/api/webhook",
+	],
 };
