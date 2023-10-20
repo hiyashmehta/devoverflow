@@ -1,4 +1,5 @@
 "use client";
+import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
 import { downvoteQuestion, upvoteQuestion } from "@/lib/actions/question.action";
 import { formatAndDivideNumber } from "@/lib/utils";
 import Image from "next/image";
@@ -47,13 +48,13 @@ const Votes = ({
                     path: pathName,
                 })
             } else if(type === 'Answer') {
-               // await upvoteAnswer({
-                //    answerId: JSON.parse(itemId),
-                //    userId: JSON.parse(userId),
-                //    hasupVoted,
-                //    hasdownVoted,
-                //    path: pathName,
-               // })
+                await upvoteAnswer({
+                	answerId: JSON.parse(itemId),
+                	userId: JSON.parse(userId),
+                	hasupVoted,
+                	hasdownVoted,
+                	path: pathName,
+             	})
             }
 
             // todo: show a toast
@@ -70,13 +71,13 @@ const Votes = ({
                     path: pathName,
                 })
             } else if(type === 'Answer') {
-               // await downvoteAnswer({
-                //    answerId: JSON.parse(itemId),
-                //    userId: JSON.parse(userId),
-                //    hasupVoted,
-                //    hasdownVoted,
-                //    path: pathName,
-               // })
+            	 await downvoteAnswer({
+                	answerId: JSON.parse(itemId),
+                	userId: JSON.parse(userId),
+                	hasupVoted,
+                	hasdownVoted,
+                	path: pathName,
+             	})
             }
 
             // todo: show a toast
@@ -131,6 +132,7 @@ const Votes = ({
 				</div>
 			</div>
 
+			{type === "Question" && (
 			<Image
 				src={
 					hasSaved
@@ -143,6 +145,7 @@ const Votes = ({
 				className="cursor-pointer"
 				onClick={handleSave}
 			/>
+			)}
 		</div>
 	);
 };
