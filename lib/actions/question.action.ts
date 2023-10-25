@@ -3,13 +3,18 @@
 import Question from "@/database/question.model";
 import { connectToDatabase } from "../mongoose";
 import Tag from "@/database/tag.model";
-import { CreateQuestionParams, GetQuestionByIdParams, GetQuestionsParams, QuestionVoteParams } from "./shared.types";
+import {
+	CreateQuestionParams,
+	GetQuestionByIdParams,
+	GetQuestionsParams,
+	QuestionVoteParams,
+} from "./shared.types";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 
 export async function getQuestions(params: GetQuestionsParams) {
 	try {
-		connectToDatabase();
+		await connectToDatabase();
 
 		const questions = await Question.find({})
 			.populate({ path: "tags", model: Tag })
@@ -28,7 +33,7 @@ export async function createQuestion(params: CreateQuestionParams) {
 	try {
 		console.log("inside create question");
 		console.log({ params });
-		connectToDatabase();
+		await connectToDatabase();
 
 		console.log("connected to database");
 
@@ -70,15 +75,19 @@ export async function createQuestion(params: CreateQuestionParams) {
 
 export async function getQuestionById(params: GetQuestionByIdParams) {
 	try {
-		connectToDatabase();
+		await connectToDatabase();
 
 		const { questionId } = params;
 
 		const question = await Question.findById(questionId)
-			.populate({ path: 'tags', model: Tag, select: '_id name' })
-			.populate({ path: 'author', model: User, select: '_id clerkId name picture' })
+			.populate({ path: "tags", model: Tag, select: "_id name" })
+			.populate({
+				path: "author",
+				model: User,
+				select: "_id clerkId name picture",
+			});
 
-			return question;
+		return question;
 	} catch (error) {
 		console.log(error);
 		throw error;
@@ -87,27 +96,31 @@ export async function getQuestionById(params: GetQuestionByIdParams) {
 
 export async function upvoteQuestion(params: QuestionVoteParams) {
 	try {
-		connectToDatabase();
+		await connectToDatabase();
 
 		const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
 		let updateQuery = {};
 
-		if(hasupVoted) {
-			updateQuery = { $pull: {upvotes: userId}}
-		} else if (hasdownVoted){
+		if (hasupVoted) {
+			updateQuery = { $pull: { upvotes: userId } };
+		} else if (hasdownVoted) {
 			updateQuery = {
 				$pull: { downvotes: userId },
-				$push: { upvotes: userId }
-			}
+				$push: { upvotes: userId },
+			};
 		} else {
-			updateQuery = { $addToSet: { upvotes: userId } }
+			updateQuery = { $addToSet: { upvotes: userId } };
 		}
 
-		const question = await Question.findByIdAndUpdate(questionId, updateQuery, { new: true });
+		const question = await Question.findByIdAndUpdate(
+			questionId,
+			updateQuery,
+			{ new: true },
+		);
 
-		if(!question) {
-			throw new Error('Question not found');
+		if (!question) {
+			throw new Error("Question not found");
 		}
 
 		// Increment author's reputation
@@ -117,31 +130,35 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
 		console.log(error);
 		throw error;
 	}
- }
+}
 
- export async function downvoteQuestion(params: QuestionVoteParams) {
+export async function downvoteQuestion(params: QuestionVoteParams) {
 	try {
-		connectToDatabase();
+		await connectToDatabase();
 
 		const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
 
 		let updateQuery = {};
 
-		if(hasdownVoted) {
-			updateQuery = { $pull: {downvotes: userId}}
-		} else if (hasupVoted){
+		if (hasdownVoted) {
+			updateQuery = { $pull: { downvotes: userId } };
+		} else if (hasupVoted) {
 			updateQuery = {
 				$pull: { upvotes: userId },
-				$push: { downvotes: userId }
-			}
+				$push: { downvotes: userId },
+			};
 		} else {
-			updateQuery = { $addToSet: { downvotes: userId } }
+			updateQuery = { $addToSet: { downvotes: userId } };
 		}
 
-		const question = await Question.findByIdAndUpdate(questionId, updateQuery, { new: true });
+		const question = await Question.findByIdAndUpdate(
+			questionId,
+			updateQuery,
+			{ new: true },
+		);
 
-		if(!question) {
-			throw new Error('Question not found');
+		if (!question) {
+			throw new Error("Question not found");
 		}
 
 		// Increment author's reputation
@@ -151,4 +168,4 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
 		console.log(error);
 		throw error;
 	}
- }
+}
