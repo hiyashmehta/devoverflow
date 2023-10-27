@@ -35,7 +35,7 @@ const EditDeleteAction = ({ type, itemId }: Props) => {
     };
   return (
     <div className='flex items-center justify-end gap-3 max-sm:w-full'>
-        {type === 'question' && (
+        {type === 'Question' && (
             <Image 
                 src="/assets/icons/edit.svg"
                 alt="Edit"
@@ -45,8 +45,7 @@ const EditDeleteAction = ({ type, itemId }: Props) => {
                 onClick={handleEdit}
             />
         )}
-
-        <Image 
+            <Image 
             src="/assets/icons/delete.svg"
             alt="Delete"
             width={14}

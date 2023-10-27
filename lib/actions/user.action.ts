@@ -19,7 +19,7 @@ import Answer from "@/database/answer.model";
 
 export async function getUserById(params: any) {
 	try {
-		connectToDatabase();
+		await connectToDatabase();
 
 		const { userId } = params;
 		console.log({ userId });
@@ -35,7 +35,7 @@ export async function getUserById(params: any) {
 
 export async function createUser(userData: CreateUserParams) {
 	try {
-		connectToDatabase();
+		await connectToDatabase();
 
 		const newUser = await User.create(userData);
 
@@ -48,7 +48,7 @@ export async function createUser(userData: CreateUserParams) {
 
 export async function updateUser(params: UpdateUserParams) {
 	try {
-		connectToDatabase();
+		await connectToDatabase();
 
 		const { clerkId, updateData, path } = params;
 
@@ -65,7 +65,7 @@ export async function updateUser(params: UpdateUserParams) {
 
 export async function deleteUser(params: DeleteUserParams) {
 	try {
-		connectToDatabase();
+		await connectToDatabase();
 
 		const { clerkId } = params;
 
@@ -246,7 +246,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 
 export async function getUserAnswers(params: GetUserStatsParams) {
 	try {
-		connectToDatabase();
+		await connectToDatabase();
 
 		const { userId, page = 1, pageSize = 10 } = params;
 

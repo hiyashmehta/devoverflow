@@ -52,12 +52,12 @@ const QuestionCard = ({
         </div>
 
         <SignedIn>
-          showActionButtons && (
+         { showActionButtons && (
             <EditDeleteAction 
-                type="question"
+                type="Question"
                 itemId={JSON.stringify(_id)}
             />
-          )
+          )}
         </SignedIn>
       </div>
 
