@@ -3,16 +3,7 @@
 import { FilterQuery } from "mongoose";
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
-import {
-	CreateUserParams,
-	DeleteUserParams,
-	GetAllUsersParams,
-	GetSavedQuestionsParams,
-	GetUserByIdParams,
-	GetUserStatsParams,
-	ToggleSaveQuestionParams,
-	UpdateUserParams,
-} from "./shared.types";
+import { CreateUserParams, DeleteUserParams, GetAllUsersParams, GetSavedQuestionsParams, GetUserByIdParams, GetUserStatsParams, ToggleSaveQuestionParams, UpdateUserParams,} from "./shared.types";
 import { revalidatePath } from "next/cache";
 import Question from "@/database/question.model";
 import Answer from "@/database/answer.model";
@@ -101,9 +92,19 @@ export async function getAllUsers(params: GetAllUsersParams) {
 	try {
 		await connectToDatabase();
 
-		// const { page = 1, pageSize = 20, filter, searchQuery } = params;
+		const { searchQuery } = params;
 
-		const users = await User.find({}).sort({ createdAt: -1 });
+		const query: FilterQuery<typeof User> = {};
+
+		if(searchQuery) {
+			query.$or =[
+				{ name: { $regex: new RegExp(searchQuery, "i")}},
+				{ clerkId: { $regex: new RegExp(searchQuery, "i")}},
+			]
+		}
+
+		const users = await User.find(query)
+		.sort({ createdAt: -1 });
 
 		return { users };
 	} catch (error) {
