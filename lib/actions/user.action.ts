@@ -156,9 +156,6 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 
 		const {
 			clerkId,
-			page = 1,
-			pageSize = 10,
-			filter,
 			searchQuery,
 		} = params;
 
