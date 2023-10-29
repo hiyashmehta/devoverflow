@@ -5,15 +5,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useForm } from "react-hook-form";
-import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { QuestionsSchema } from "@/lib/validations";
@@ -37,7 +29,7 @@ const Question = ({ type, mongoUserId, questionDetails }: Props) => {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	const parsedQuestionDetails = JSON.parse(questionDetails || '' );
+	const parsedQuestionDetails = questionDetails && JSON.parse(questionDetails || '' );
 
 	const groupedTags = parsedQuestionDetails?.tags.map((tag: string) => ({ name: tag }))
 
