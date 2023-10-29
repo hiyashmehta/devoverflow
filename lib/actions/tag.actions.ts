@@ -8,7 +8,7 @@ import {
 	GetTopInteractedTagsParams,
 } from "./shared.types";
 import Tag, { ITag } from "@/database/tag.model";
-import { FilterQuery } from "mongoose";
+import { FilterQuery, _FilterQuery } from "mongoose";
 import Question from "@/database/question.model";
 
 export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
@@ -34,11 +34,19 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 	}
 }
 
-export async function getAllTags() {
+export async function getAllTags(params: GetAllTagsParams) {
 	try {
 		await connectToDatabase();
 
-		const tags = await Tag.find({});
+		const { searchQuery } = params;
+
+		const query: _FilterQuery<typeof Tag> ={};
+
+		if(searchQuery) {
+			query.$or = [{name: {$regex: new RegExp(searchQuery, "i")}}]
+		}
+
+		const tags = await Tag.find(query);
 
 		return { tags };
 	} catch (error) {
