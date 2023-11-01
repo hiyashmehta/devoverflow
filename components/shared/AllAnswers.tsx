@@ -21,8 +21,9 @@ const AllAnswers = async ({ questionId, userId, totalAnswers, page, filter }: Pr
      const result = await getAnswers({
             questionId,
             page: page ? +page: 1,
-            sortBy: filter
-    })
+            sortBy: filter,
+    });
+
   return (
     <div className='mt-11'>
         <div className='flex items-center justify-between'>
@@ -31,7 +32,7 @@ const AllAnswers = async ({ questionId, userId, totalAnswers, page, filter }: Pr
             <Filter filters={AnswerFilters} />
         </div>
 
-        <div >
+        <div>
             {result.answers.map((answer) => (
                 <article key={answer._id} className='light-border border-b py-10'>
                     <div className='flex items-center justify-between'>
@@ -52,31 +53,31 @@ const AllAnswers = async ({ questionId, userId, totalAnswers, page, filter }: Pr
                                     <p className='small-regular text-light400_light500 mt-0.5 line-clamp-1 ml-0.5'>
                                         answered {" "}
                                         {getTimeStamp(answer.createdAt)}
-                                        </p>
+                                    </p>
                                 </div>
                             </Link>
-                            <div className='flex justify-end'>
-                            <Votes 
-                             type='Answer'
-                        itemId={JSON.stringify(answer._id)}
-                        userId={JSON.stringify(userId)}
-                        upvotes={answer.upvotes.length}
-                        hasupVoted={answer.upvotes.includes(userId)}
-                        downvotes={answer.downvotes.length}
-                        hasdownVoted={answer.downvotes.includes(userId)} 
-                    />
-                            </div>
-                        </div> 
+                        <div className='flex justify-end'>
+                <Votes 
+                type='Answer'
+                itemId={JSON.stringify(answer._id)}
+                userId={JSON.stringify(userId)}
+                upvotes={answer.upvotes.length}
+                hasupVoted={answer.upvotes.includes(userId)}
+                downvotes={answer.downvotes.length}
+                hasdownVoted={answer.downvotes.includes(userId)} 
+            />
+                        </div>
+                       </div> 
                     </div>
-                    <ParseHTML data={answer.content} />
-                </article>
+                <ParseHTML data={answer.content} />
+                 </article>
             ))} 
         </div>
-        <div className='mt-10 w-full'>
+                <div className='mt-10 w-full'>
                 <Pagination
                 pageNumber={page ? +page : 1}
-                isNext={result.isNextAnswer}
-        </div>
+                isNext={result.isNextAnswer}/>
+                </div>
     </div>
   )
 }
