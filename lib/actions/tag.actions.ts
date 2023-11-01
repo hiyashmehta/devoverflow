@@ -38,7 +38,7 @@ export async function getAllTags(params: GetAllTagsParams) {
 	try {
 		await connectToDatabase();
 
-		const { searchQuery, filter, page =1, pageSize = 10 } = params;
+		const { searchQuery, filter, page =1, pageSize = 1 } = params;
 
 		const skipAmount = (page - 1) * pageSize;
 
@@ -86,7 +86,7 @@ export async function getQuestionsByTagId(params: GetQuestionsByTagIdParams) {
 	try {
 		await connectToDatabase();
 
-		const { tagId, searchQuery, page = 1, pageSize = 10 } = params;
+		const { tagId, searchQuery, page = 1, pageSize = 1 } = params;
 
 		const skipAmount = (page - 1) * pageSize;
 

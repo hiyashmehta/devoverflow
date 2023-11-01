@@ -21,7 +21,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
         All Tags
     </h1>
 
-<div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
+    <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
     <LocalSearchbar
         route="/tags"
         iconPosition="right"
@@ -34,7 +34,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
         filters={TagFilters}
         otherClasses="min-h-[56px] sm:min-w-[170px]"
     />
-</div>
+    </div>
 
 <section className='mt-12 flex flex-wrap gap-4'>
     {result.tags.length > 0 ? (
@@ -66,6 +66,7 @@ const Page = async ({ searchParams }: SearchParamsProps) => {
             <Pagination
                 pageNumber={searchParams?.page ? +searchParams.page : 1}
                 isNext={result.isNext}
+                />
         </div>
 </>
   )

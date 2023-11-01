@@ -92,7 +92,7 @@ export async function getAllUsers(params: GetAllUsersParams) {
 	try {
 		await connectToDatabase();
 
-		const { searchQuery, filter, page = 1, pageSize = 10 } = params;
+		const { searchQuery, filter, page = 1, pageSize = 1 } = params;
 
 		const skipAmount = (page - 1) * pageSize;
 
@@ -181,7 +181,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 			searchQuery,
 			filter,
 			page = 1,
-			pageSize = 10,
+			pageSize = 1,
 		} = params;
 
 		const skipAmount = (page - 1) * pageSize;
@@ -276,7 +276,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
 	try {
 		await connectToDatabase();
 
-		const { userId, page = 1, pageSize = 10 } = params;
+		const { userId, page = 1, pageSize = 1 } = params;
 
 		const skipAmount = (page - 1) * pageSize;
 
@@ -304,7 +304,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
 	try {
 		await connectToDatabase();
 
-		const { userId, page = 1, pageSize = 10 } = params;
+		const { userId, page = 1, pageSize = 1 } = params;
 
 		const skipAmount = (page - 1) * pageSize;
 
