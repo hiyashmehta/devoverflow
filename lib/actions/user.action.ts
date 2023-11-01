@@ -179,8 +179,12 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 		const {
 			clerkId,
 			searchQuery,
-			filter
+			filter,
+			page = 1,
+			pageSize = 10,
 		} = params;
+
+		const skipAmount = (page - 1) * pageSize;
 
 		const query: FilterQuery<typeof Question> = searchQuery
 			? { title: { $regex: new RegExp(searchQuery, "i") } }
@@ -213,6 +217,8 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 			match: query,
 			options: {
 				sort: sortOptions,
+				skip: skipAmount,
+				limit: pageSize + 1,
 			},
 			populate: [
 				{ path: "tags", model: "Tag", select: "_id name" },
@@ -228,9 +234,10 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
 			throw new Error("User not found");
 		}
 
+		const isNext = user.saved.length > pageSize;
 		const savedQuestions = user.saved;
 
-		return { savedQuestions };
+		return { savedQuestions, isNext };
 	} catch (error) {
 		console.log(error);
 		throw error;
