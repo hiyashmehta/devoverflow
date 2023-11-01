@@ -5,11 +5,12 @@ import { IQuestion } from '@/database/question.model'
 import { URLProps } from '@/types'
 import { getQuestionsByTagId } from '@/lib/actions/tag.actions'
 import React from 'react'
+import Pagination from '@/components/shared/Pagination'
 
 const page = async ({ params, searchParams }: URLProps) => {
     const result = await getQuestionsByTagId({
         tagId: params.id,
-        page: 1,
+        page: searchParams.page ? +searchParams.page : 1,
         searchQuery: searchParams.q
     })
 
@@ -52,6 +53,12 @@ const page = async ({ params, searchParams }: URLProps) => {
 							linkTitle="Ask a Question"
 						/>
 					)}
+				</div>
+				<div className='mt-10'>
+						<Pagination
+							pageNumber={searchParams?.page ? +searchParams.page : 1}
+							isNext={result.isNext}
+						/>
 				</div>
 			</>
   )
