@@ -13,7 +13,7 @@ const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
   const result = await getUserAnswers({
     userId,
     page: searchParams.page ? +searchParams.page : 1,
-  })
+  });
 
   return (
     <>
@@ -32,6 +32,7 @@ const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
           <Pagination
               pageNumber={searchParams?.page ? +searchParams.page : 1}
               isNext={result.isNextAnswer}
+              />
       </div>
     </>
   )
