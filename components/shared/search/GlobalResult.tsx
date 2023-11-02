@@ -4,7 +4,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GlobalFilters from './GlobalFilters';
 
 const GlobalResult = () => {
