@@ -20,18 +20,22 @@ const GlobalSearch = () => {
 
   useEffect(() => {
     const handleOutsideClick = (event: any) => {
-      if(searchContainerRef.current.contains(event.target))
-    } {
-  setIsOpen(false);
-  setSearch('')
-}
-setIsOpen(false);
-document.addEventListener('mousedown', handleOutsideClick);
-return () ={
-  document.removeEventListener('mousedown', handleOutsideClick);
+      if (
+        searchContainerRef.current && 
+        // @ts-ignore
+        !searchContainerRef.current?.contains(event.target) 
+      ) {
+        setIsOpen(false);
+        setSearch("");
+      }
+    };
 
-}
-}, [pathname])
+    document.addEventListener("click", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+    };
+  },[]);
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(()=> {
@@ -85,4 +89,4 @@ return () ={
   )
 }
 
-export default GlobalSearch
+export default GlobalSearch;
