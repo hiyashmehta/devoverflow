@@ -3,14 +3,7 @@
 import Question from "@/database/question.model";
 import { connectToDatabase } from "../mongoose";
 import Tag from "@/database/tag.model";
-import {
-	CreateQuestionParams,
-	DeleteQuestionParams,
-	EditQuestionParams,
-	GetQuestionByIdParams,
-	GetQuestionsParams,
-	QuestionVoteParams,
-} from "./shared.types";
+import { CreateQuestionParams, DeleteQuestionParams, EditQuestionParams, GetQuestionByIdParams, GetQuestionsParams, QuestionVoteParams,} from "./shared.types";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/answer.model";
@@ -108,11 +101,20 @@ export async function createQuestion(params: CreateQuestionParams) {
 		});
 
 		// Create an interaction record for the user's ask_question action
+		await Interaction.create({
+			user: author,
+			action: "ask-question",
+			question: question._id,
+			tags: tagDocuments,
+		})
 
 		// Increment author's reputation by +5 for creating a question
+		await User.findByIdAndUpdate(author, { $inc: {reputation: 5}})
 
 		revalidatePath(path);
-	} catch (error) {}
+	} catch (error) {
+		console.log(error);
+	}
 }
 
 export async function getQuestionById(params: GetQuestionByIdParams) {
@@ -165,7 +167,15 @@ export async function upvoteQuestion(params: QuestionVoteParams) {
 			throw new Error("Question not found");
 		}
 
-		// Increment author's reputation
+		// Increment author's reputation by +1/-1 for upVoting/revoking an upvote fir the question
+		await User.findByIdAndUpdate(userId, {
+			$inc: { reputation: hasupVoted ? -1 : 1}
+		})
+
+		// Increment author's reputation by +10/-10 for receiving an upvote/downvote for the question
+		await User.findByIdAndUpdate(question.author, {
+			$inc: { reputation: hasupVoted ? -10 : 10}
+		})
 
 		revalidatePath(path);
 	} catch (error) {
