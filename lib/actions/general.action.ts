@@ -54,8 +54,9 @@ export async function globalSearch(params: SearchParams) {
             if(!modelInfo) {
                 throw new Error('Invalid search type');
             }
+            
             const queryResults = await modelInfo.model
-            .find({ [modelInfo.searchField], regexQuery })
+            .find({ [modelInfo.searchField]: regexQuery })
             .limit(8)
 
             results = queryResults.map((item) => ({
