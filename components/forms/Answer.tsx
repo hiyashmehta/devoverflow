@@ -22,7 +22,7 @@ interface Props {
 const Answer = ({question, questionId, authorId }: Props) => {
     const pathName = usePathname();
     const [ isSubmitting, setIsSubmitting ] = useState(false)
-    const [setIsSubmittingAI, setSetIsSubmittingAI] = useState(false)
+    const [isSubmittingAI, setIsSubmittingAI] = useState(false)
     const { mode } = useTheme();
     const editorRef = useRef(null)
     const form = useForm<z.infer<typeof AnswerSchema>>({
@@ -60,7 +60,7 @@ const Answer = ({question, questionId, authorId }: Props) => {
     const generateAIAnswer = async () => {
         if(!authorId) return;
 
-        setSetIsSubmittingAI(true);
+        setIsSubmittingAI(true);
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`, {
                 method: 'POST',
@@ -69,11 +69,21 @@ const Answer = ({question, questionId, authorId }: Props) => {
 
             const aiAnswer = await response.json();
 
-            alert(aiAnswer.reply);
+            // Convert plain text to HTML Format 
+            const formattedAnswer = aiAnswer.reply.replace(/\n/g, '<br />');
+
+            if(editorRef.current) {
+                const editor = editorRef.current as any;
+
+                editor.setContent(formattedAnswer);
+            }
+
+            // Toast...
+
         } catch (error) {
             console.log(error);
         } finally {
-            setSetIsSubmittingAI(false);
+            setIsSubmittingAI(false);
         }
     }
 
@@ -83,6 +93,12 @@ const Answer = ({question, questionId, authorId }: Props) => {
             <h4 className='paragraph-semibold text-dark400_light800'>Write your answer here</h4>
 
             <Button className='btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none dark:text-primary-500' onClick={generateAIAnswer}>
+                {isSubmittingAI ? (
+                    <>
+                        Generating...
+                    </>
+                ) :( 
+                    <>
                 <Image
                     src="/assets/icons/stars.svg"
                     alt='star'
@@ -90,6 +106,8 @@ const Answer = ({question, questionId, authorId }: Props) => {
                     height={12}
                     className='object-contain'
                 />
+                </>
+                )}
                 Generate AI Answer
             </Button>
         </div>
