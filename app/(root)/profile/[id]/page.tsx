@@ -3,7 +3,7 @@ import { getUserInfo } from "@/lib/actions/user.action";
 import { URLProps } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { SignIn, auth } from "@clerk/nextjs";
+import { SignedIn, auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -69,7 +69,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
 				</div>
 
 				<div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
-					<SignIn>
+					<SignedIn>
 						{clerkId === userInfo.user.clerkId && (
 							<Link href="/profile/edit">
 								<Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-3">
@@ -77,16 +77,16 @@ const Page = async ({ params, searchParams }: URLProps) => {
 								</Button>
 							</Link>
 						)}
-					</SignIn>
+					</SignedIn>
 				</div>
 			</div>
 
-			<Stats 
+			<Stats
 				badges={userInfo.badgeCounts}
 				reputation={userInfo.reputation}
-                totalQuestions={userInfo.totalQuestions}
-                totalAnswers={userInfo.totalAnswers}
-            />
+				totalQuestions={userInfo.totalQuestions}
+				totalAnswers={userInfo.totalAnswers}
+			/>
 
 			<div className="mt-10 flex gap-10">
 				<Tabs defaultValue="top-posts" className="flex-1">
@@ -104,7 +104,6 @@ const Page = async ({ params, searchParams }: URLProps) => {
 							userId={userInfo.user._id}
 							clerkId={clerkId}
 						/>
-
 					</TabsContent>
 					<TabsContent value="answers">
 						<AnswersTab

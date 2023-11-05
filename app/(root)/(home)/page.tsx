@@ -12,15 +12,15 @@ import Link from "next/link";
 
 import type { Metadata } from "next";
 
-export const metadata : Metadata ={
-	title: 'Home | Dev Overflow',
-}
+export const metadata: Metadata = {
+	title: "Home | Dev Overflow",
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
 	const result = await getQuestions({
 		searchQuery: searchParams.q,
 		filter: searchParams.filter,
-		page: searchParams.page,
+		page: Number(searchParams.page),
 	});
 
 	// define recommended questions
@@ -86,12 +86,11 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 					)}
 				</div>
 				<div className="mt-10">
-				<Pagination
-					pageNumber={searchParams?.page ? +searchParams.page: 1}
-					isNext={result.isNext}
-				/>
+					<Pagination
+						pageNumber={searchParams?.page ? +searchParams.page : 1}
+						isNext={result.isNext}
+					/>
 				</div>
 			</>
 		);
 }
-

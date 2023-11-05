@@ -10,27 +10,27 @@ import Pagination from "@/components/shared/Pagination";
 
 import type { Metadata } from "next";
 
-export const metadata : Metadata ={
-	title: 'Saved Questions | Dev Overflow',
-}
+export const metadata: Metadata = {
+	title: "Saved Questions | Dev Overflow",
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-    const { userId } = auth();
+	const { userId } = auth();
 
-    if (!userId) return null;
+	if (!userId) return null;
 
 	const result = await getSavedQuestions({
-        clerkId: userId!,
+		clerkId: userId!,
 		searchQuery: searchParams.q,
 		filter: searchParams.filter,
 		page: searchParams.page ? +searchParams.page : 1,
-    });
+	});
 	if (result)
 		return (
 			<>
-					<h1 className="h1-bold text-dark100_light900">
-						Saved Questions
-					</h1>
+				<h1 className="h1-bold text-dark100_light900">
+					Saved Questions
+				</h1>
 
 				<div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
 					<LocalSearchbar
@@ -49,7 +49,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 
 				<div className="mt-10 flex w-full flex-col gap-6">
 					{result.savedQuestions.length > 0 ? (
-                        result.savedQuestions.map((question: any) => (
+						result.savedQuestions.map((question: any) => (
 							<QuestionCard
 								key={question._id}
 								_id={question._id}
@@ -80,4 +80,3 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 			</>
 		);
 }
-

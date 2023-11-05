@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { getTimeStamp } from "@/lib/utils";
 import { SignedIn } from "@clerk/nextjs";
-import EditDeleteAction from "../shared/EditdeleteAction";
+import EditDeleteAction from "../shared/EditDeleteAction";
 
 interface Props {
 	clerkId?: string | null;

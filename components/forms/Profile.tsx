@@ -1,139 +1,214 @@
-"use client"
-import React, { useState } from 'react'
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from '../ui/textarea';
-import { ProfileSchema } from '@/lib/validations';
-import { usePathname, useRouter } from 'next/navigation';
+"use client";
+
+import * as z from "zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { usePathname, useRouter } from "next/navigation";
+
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "../ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
+
+import { ProfileSchema } from "@/lib/validations";
+import { updateUser } from "@/lib/actions/user.action";
 
 interface Params {
-  clerkId: string;
-  user: string;
+	clerkId: string;
+	user: string;
 }
 
 const Profile = ({ clerkId, user }: Params) => {
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const parsedUser = JSON.parse(user);
-    const ProfileSchema = z.object({
-        username = z.string().min(2).max(50),
-    })
-    const router = useRouter();
-    const pathname = usePathname();
+	const parsedUser = JSON.parse(user);
+	const router = useRouter();
+	const pathname = usePathname();
 
-    const form = useForm<z.infer<typeof ProfileSchema>>({
-        resolver: zodResolver(ProfileSchema),
-        defaultValues: {
-            name: parsedUser.name || '',
-            username: parsedUser.username || '',
-            portfolioWebsite: parsedUser.portfolioWebsite || '',
-            location: parsedUser.location || '',
-            bio: parsedUser.bio || '',
-        },
-    })
+	const [submitting, setSubmitting] = useState(false);
 
-    async function onSubmit(value: z.infer<typeof ProfileSchema>) {
-        setIsSubmitting(true);
+	const form = useForm<z.infer<typeof ProfileSchema>>({
+		resolver: zodResolver(ProfileSchema),
+		defaultValues: {
+			name: parsedUser.name || "",
+			username: parsedUser.username || "",
+			portfolioWebsite: parsedUser.portfolioWebsite || "",
+			location: parsedUser.location || "",
+			bio: parsedUser.bio || "",
+		},
+	});
 
-        try{
-            await updateUser({
-                clerkId,
-                updateData: {
-                    name: values.name,
-                    username: values.username,
-                    portfolioWebsite: values.portfolioWebsite,
-                    location: values.location,
-                    bio: values.bio,
-                },
-                path: pathname,
-            })
-            router.back();
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setIsSubmitting(false);
-        }
-    }
-  return (
-    <Form {...form}>
-    <form onSubmit={form.handleSubmit(onSubmit)} className="mt-9 flex w-full flex-col gap-9 ">
-      <FormField
-        control={form.control}
-        name="name"
-        render={({ field }) => (
-          <FormItem className='space-y-3.5'>
-            <FormLabel>Name <span className='text-primary-500'>*</span> </FormLabel>
-            <FormControl>
-              <Input className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border' placeholder="Your name" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="username"
-        render={({ field }) => (
-          <FormItem className='space-y-3.5'>
-            <FormLabel>Username <span className='text-primary-500'>*</span> </FormLabel>
-            <FormControl>
-              <Input className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border' placeholder="Your username" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="portfolioWebsite"
-        render={({ field }) => (
-          <FormItem className='space-y-3.5'>
-            <FormLabel>Portfolio Link </FormLabel>
-            <FormControl>
-              <Input className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border' placeholder="Your portfolio URL" type='url' {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="location"
-        render={({ field }) => (
-          <FormItem className='space-y-3.5'>
-            <FormLabel>Location </FormLabel>
-            <FormControl>
-              <Input className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border' placeholder="Where are you from?" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="bio"
-        render={({ field }) => (
-          <FormItem className='space-y-3.5'>
-            <FormLabel>Bio </FormLabel>
-            <FormControl>
-              <Textarea className='no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border' placeholder="What is special about you?" {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <div className='mt-7 flex justify-end'>
-      <Button type="submit" className='primary-gradient w-fit'disabled={isSubmitting}>
-        {isSubmitting ? "Saving..." : "Save"}
-        Submit</Button>
-      </div>
-      
-    </form>
-  </Form>
-  )
-}
+	const handleUpdateProfile = async (
+		values: z.infer<typeof ProfileSchema>,
+	) => {
+		setSubmitting(true);
+		try {
+			await updateUser({
+				clerkId,
+				updateData: {
+					name: values.name,
+					username: values.username,
+					portfolioWebsite: values.portfolioWebsite,
+					location: values.location,
+					bio: values.bio,
+				},
+				path: pathname,
+			});
 
-export default Profile
+			toast({
+				title: "Profile Updated",
+				description:
+					"Your profile information has been successfully updated.",
+			});
+
+			router.back();
+		} catch (error: any) {
+			toast({
+				title: "Uh oh! Something went wrong.",
+				description: "There was a problem with your request.",
+			});
+		} finally {
+			setSubmitting(false);
+		}
+	};
+
+	return (
+		<Form {...form}>
+			<form
+				onSubmit={form.handleSubmit(handleUpdateProfile)}
+				className="mt-9 flex w-full flex-col gap-9"
+			>
+				<FormField
+					control={form.control}
+					name="name"
+					render={({ field }) => (
+						<FormItem className="space-y-3.5">
+							<FormLabel className="paragraph-semibold text-dark400_light800">
+								Name <span className="text-primary-500">*</span>
+							</FormLabel>
+							<FormControl>
+								<Input
+									className="no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border"
+									placeholder="Your Name"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="username"
+					render={({ field }) => (
+						<FormItem className="space-y-3.5">
+							<FormLabel className="paragraph-semibold text-dark400_light800">
+								Username{" "}
+								<span className="text-primary-500">*</span>
+							</FormLabel>
+							<FormControl>
+								<Input
+									className="no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border"
+									placeholder="Your username"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="portfolioWebsite"
+					render={({ field }) => (
+						<FormItem className="space-y-3.5">
+							<FormLabel className="paragraph-semibold text-dark400_light800">
+								Portfolio Link
+							</FormLabel>
+							<FormControl>
+								<Input
+									type="url"
+									className="no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border"
+									placeholder="Your Portfolio link"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="location"
+					render={({ field }) => (
+						<FormItem className="space-y-3.5">
+							<FormLabel className="paragraph-semibold text-dark400_light800">
+								Location{" "}
+								<span className="text-primary-500">*</span>
+							</FormLabel>
+							<FormControl>
+								<Input
+									className="no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border"
+									placeholder="Where do you live?"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="bio"
+					render={({ field }) => (
+						<FormItem className="space-y-3.5">
+							<FormLabel className="paragraph-semibold text-dark400_light800">
+								Bio <span className="text-primary-500">*</span>
+							</FormLabel>
+							<FormControl>
+								<Textarea
+									rows={5}
+									className="no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border"
+									placeholder="What's special about you?"
+									{...field}
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<div className="mt-7 flex justify-end">
+					<Button
+						type="submit"
+						className="primary-gradient w-fit"
+						disabled={submitting}
+					>
+						{submitting ? (
+							<>
+								<ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+								Submitting...
+							</>
+						) : (
+							<>Submit</>
+						)}
+					</Button>
+				</div>
+			</form>
+		</Form>
+	);
+};
+
+export default Profile;
