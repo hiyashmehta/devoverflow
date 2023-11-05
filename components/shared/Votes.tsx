@@ -95,7 +95,10 @@ const Votes = ({
             }
 
             // todo: show a toast
-            return
+            return toast({
+				title: `downvote ${!hasdownVoted ? 'Successful' : 'Removed'}`,
+				variant: !hasdownVoted ? 'default' : 'destructive',
+			})
         }
     }
 
