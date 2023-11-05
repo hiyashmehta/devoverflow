@@ -8,6 +8,12 @@ import { QuestionFilters } from "@/constants/filters";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
 
+import type { Metadata } from "next";
+
+export const metadata : Metadata ={
+	title: 'Saved Questions | Dev Overflow',
+}
+
 export default async function Home({ searchParams }: SearchParamsProps) {
     const { userId } = auth();
 
