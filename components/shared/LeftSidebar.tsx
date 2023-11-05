@@ -20,14 +20,13 @@ const LeftSidebar = () => {
 							item.route.length > 1) ||
 						pathname === item.route;
 
-						if(item.route === '/profile') {
-							if(userId) {
-								item.route = `${item.route}/${userId}`
-							} else {
-								return null
-							}
+					if (item.route === "/profile") {
+						if (userId) {
+							item.route = `${item.route}/${userId}`;
+						} else {
+							return null;
 						}
-					
+					}
 
 					return (
 						<Link
